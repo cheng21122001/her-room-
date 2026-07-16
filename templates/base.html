@@ -8,37 +8,52 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-<header class="site-header">
-  {% from "_silhouette.html" import silhouette %}
-  <div class="header-emblem">
-    {{ silhouette(0, "emblem-figure emblem-left") }}
-    <div class="header-title-block">
-      <p class="kicker">EST. {{ ' ' }}真实犯罪档案</p>
-      <h1 class="site-title"><a href="{{ url_for('index') }}">与她的房间</a></h1>
-      <p class="kicker">IN HER ROOM · A CASE ARCHIVE</p>
+<body class="app-body">
+
+{% from "_silhouette.html" import silhouette %}
+<aside class="sidebar">
+  <a class="sidebar-brand" href="{{ url_for('overview') }}">
+    {{ silhouette(0, "brand-figure") }}
+    <div class="brand-text">
+      <p class="brand-title">与她的房间</p>
+      <p class="brand-sub">IN HER ROOM</p>
     </div>
-    {{ silhouette(0, "emblem-figure emblem-right") }}
-  </div>
-  <nav class="site-nav">
-    <a href="{{ url_for('index') }}">档案</a>
-    <span class="nav-divider">/</span>
-    <a href="{{ url_for('timeline') }}">时间线</a>
-    <span class="nav-divider">/</span>
-    <a href="{{ url_for('stats') }}">统计</a>
-    <span class="nav-divider">/</span>
-    <a href="{{ url_for('glossary') }}">词汇表</a>
-    <span class="nav-divider">/</span>
-    <a href="{{ url_for('random_case') }}">随机翻阅</a>
+  </a>
+
+  {% set nav = [
+    ('overview', url_for('overview'), '总览'),
+    ('index', url_for('index'), '档案库'),
+    ('timeline', url_for('timeline'), '时间线'),
+    ('network', url_for('network'), '关系网络'),
+    ('stats', url_for('stats'), '统计'),
+    ('glossary', url_for('glossary'), '词汇表'),
+    ('capture', url_for('capture'), '录入工具'),
+  ] %}
+  <nav class="sidebar-nav">
+    {% for endpoint, href, label in nav %}
+    <a href="{{ href }}" class="sidebar-link {% if request.endpoint == endpoint %}sidebar-link--active{% endif %}">{{ label }}</a>
+    {% endfor %}
+    <a href="{{ url_for('random_case') }}" class="sidebar-link">随机翻阅</a>
   </nav>
-</header>
 
-<main class="site-main">
-  {% block content %}{% endblock %}
-</main>
+  <div class="sidebar-foot">
+    <p class="sidebar-foot-label">导出</p>
+    <div class="sidebar-foot-links">
+      <a href="{{ url_for('export_json') }}">JSON</a>
+      <span>/</span>
+      <a href="{{ url_for('export_csv') }}">CSV</a>
+    </div>
+  </div>
+</aside>
 
-<footer class="site-footer">
-  <p>本档案仅供个人研究与检索使用 · 内容整理自公开司法记录、新闻报道与出版物</p>
-</footer>
+<div class="app-main">
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>本档案仅供个人研究与检索使用 · 内容整理自公开司法记录、新闻报道与出版物</p>
+  </footer>
+</div>
+
 </body>
 </html>

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "_symbols.html" import symbol %}
 {% block content %}
+<div class="page-wrap">
 
 <section class="search-panel">
   <form method="get" action="{{ url_for('index') }}" class="search-form">
@@ -60,4 +61,5 @@
   {% endfor %}
 </section>
 
+</div>
 {% endblock %}

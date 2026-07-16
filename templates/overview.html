@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "_symbols.html" import symbol %}
+{% block title %}总览 · 与她的房间{% endblock %}
+{% block content %}
+<div class="page-wrap">
+
+<section class="page-head">
+  <h1 class="page-title">总览</h1>
+  <p class="page-sub">凡被记下的，皆可被检视。</p>
+</section>
+
+<section class="stat-cards">
+  <a class="stat-card" href="{{ url_for('index') }}">
+    <span class="stat-num">{{ total }}</span>
+    <span class="stat-label">馆藏档案</span>
+  </a>
+  <a class="stat-card stat-card--dark" href="{{ url_for('timeline') }}">
+    <span class="stat-num">{{ span[1] - span[0] }}</span>
+    <span class="stat-label">时间跨度（年）</span>
+  </a>
+  <a class="stat-card" href="{{ url_for('stats') }}">
+    <span class="stat-num">{{ n_regions }}</span>
+    <span class="stat-label">地区</span>
+  </a>
+  <a class="stat-card stat-card--dark" href="{{ url_for('stats') }}">
+    <span class="stat-num">{{ n_types }}</span>
+    <span class="stat-label">案件类型</span>
+  </a>
+  <a class="stat-card" href="{{ url_for('glossary') }}">
+    <span class="stat-num">{{ n_terms }}</span>
+    <span class="stat-label">词汇表词条</span>
+  </a>
+</section>
+
+<section class="overview-columns">
+  <div class="overview-col">
+    <h2 class="section-title">最新收录</h2>
+    <div class="latest-list">
+      {% for case in latest %}
+      <a class="latest-item" href="{{ url_for('case_detail', case_id=case['id']) }}">
+        <span class="latest-symbol">{{ symbol(case['symbol']) }}</span>
+        <span class="latest-body">
+          <span class="latest-no">{{ case['archive_no'] }}</span>
+          <span class="latest-name">{{ case['name'] }}</span>
+          <span class="latest-meta">{{ case['era'] }} · {{ case['region'] }} · {{ case['case_type'] }}</span>
+        </span>
+      </a>
+      {% endfor %}
+    </div>
+    <p class="overview-more"><a href="{{ url_for('random_case') }}">随机翻开一份档案 ↗</a></p>
+  </div>
+
+  <div class="overview-col">
+    <h2 class="section-title">年代分布</h2>
+    <dl class="bar-chart bar-chart--compact">
+      {% for label, n, pct in by_era %}
+      <div class="bar-row">
+        <dt class="bar-label">{{ label }}</dt>
+        <dd class="bar-track"><span class="bar" style="width: {{ pct }}%"></span><span class="bar-count">{{ n }}</span></dd>
+      </div>
+      {% endfor %}
+    </dl>
+
+    <h2 class="section-title" style="margin-top: 2.5rem;">类型分布</h2>
+    <dl class="bar-chart bar-chart--compact">
+      {% for label, n, pct in by_type %}
+      <div class="bar-row">
+        <dt class="bar-label">{{ label }}</dt>
+        <dd class="bar-track"><span class="bar" style="width: {{ pct }}%"></span><span class="bar-count">{{ n }}</span></dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </div>
+</section>
+
+</div>
+{% endblock %}

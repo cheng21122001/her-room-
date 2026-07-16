@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}录入工具 · 与她的房间{% endblock %}
+{% block content %}
+<div class="page-wrap">
+
+<section class="page-head">
+  <h1 class="page-title">录入工具</h1>
+  <p class="page-sub">填写后生成代码片段，粘贴进仓库的 seed_data.py 并推送即可上线——本页不会直接修改任何数据。</p>
+</section>
+
+<form class="case-form" id="capture-form" onsubmit="return false;">
+  <fieldset class="form-fieldset">
+    <legend>基础信息</legend>
+    <div class="form-grid">
+      <label>档案编号<input type="text" name="archive_no" value="{{ next_no }}"></label>
+      <label>姓名 *<input type="text" name="name" required></label>
+      <label>别名<input type="text" name="aliases" placeholder="别名 / 绰号 / 英文名"></label>
+      <label>时间段<input type="text" name="period" placeholder="例如：1989–1990年"></label>
+      <label>年代分类<input type="text" name="era" placeholder="例如：20世纪90年代"></label>
+      <label>地区<input type="text" name="region" placeholder="例如：美国"></label>
+      <label>起始年份<input type="number" name="year_start" placeholder="例如：1989"></label>
+      <label>地点<input type="text" name="location"></label>
+      <label>案件类型<input type="text" name="case_type" placeholder="例如：连环杀人"></label>
+      <label>司法结果<input type="text" name="credibility" placeholder="已定罪 / 未定罪 · 悬案 / 史料存争议"></label>
+      <label>象征符号
+        <select name="symbol">
+          {% for value, label in symbol_choices %}
+          <option value="{{ value }}">{{ label }}（{{ value }}）</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+    <label>一句话简述<textarea name="summary" rows="2"></textarea></label>
+  </fieldset>
+
+  <fieldset class="form-fieldset">
+    <legend>案件时间线（每行一条，格式：时间 | 事件）</legend>
+    <textarea name="timeline" rows="6" placeholder="1989.11 | 首名受害者遇害&#10;1991.1 | 被捕"></textarea>
+  </fieldset>
+
+  <fieldset class="form-fieldset">
+    <legend>案件经过与判决</legend>
+    <textarea name="case_details" rows="6"></textarea>
+  </fieldset>
+
+  <fieldset class="form-fieldset">
+    <legend>心理 / 动机侧写</legend>
+    <textarea name="psychological_profile" rows="5"></textarea>
+  </fieldset>
+
+  <fieldset class="form-fieldset">
+    <legend>关联词条</legend>
+    <div class="term-checks">
+      {% for entry in glossary %}
+      <label class="term-check"><input type="checkbox" name="terms" value="{{ entry['id'] }}"> {{ entry['term'] }}</label>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <fieldset class="form-fieldset">
+    <legend>资料来源</legend>
+    <textarea name="sources" rows="3" placeholder="书籍 / 庭审记录 / 新闻报道 / 纪录片……"></textarea>
+  </fieldset>
+
+  <div class="detail-actions">
+    <button type="button" class="btn-search" id="generate-btn">生成代码片段</button>
+  </div>
+</form>
+
+<section class="snippet-section" id="snippet-section" hidden>
+  <h2 class="section-title">生成结果</h2>
+  <ol class="snippet-steps">
+    <li>复制下面的代码块</li>
+    <li>打开仓库中的 <code>seed_data.py</code>，粘贴到 <code>CASES = [ ... ]</code> 列表末尾（最后一个 <code>},</code> 之后、<code>]</code> 之前）</li>
+    <li>运行 <code>python validate.py</code> 确认通过，然后 <code>git push</code> 上线</li>
+  </ol>
+  <div class="snippet-box">
+    <button type="button" class="btn-outline snippet-copy" id="copy-btn">复制</button>
+    <pre id="snippet-output"></pre>
+  </div>
+</section>
+
+</div>
+<script src="{{ url_for('static', filename='js/capture.js') }}"></script>
+{% endblock %}
