@@ -1,51 +1,19 @@
-import hmac
 import os
 import sqlite3
 
-from flask import Flask, g, render_template, request, redirect, url_for, abort, Response
+from flask import Flask, g, render_template, request, abort
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "her_room.db")
 SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
 
-SITE_USER = os.environ.get("SITE_USER")
-SITE_PASSWORD = os.environ.get("SITE_PASSWORD")
-
-# Anyone can browse and submit new cases; only editing/deleting existing
-# entries requires the site password, so public contributions can't be
-# vandalized or wiped by other visitors.
-AUTH_REQUIRED_ENDPOINTS = {"case_edit", "case_delete"}
-
 app = Flask(__name__)
-
-
-@app.before_request
-def require_auth():
-    # Auth is only enforced when SITE_USER/SITE_PASSWORD are set (e.g. in production).
-    # Local development without those env vars stays open.
-    if not SITE_USER or not SITE_PASSWORD:
-        return
-    if request.endpoint not in AUTH_REQUIRED_ENDPOINTS:
-        return
-    auth = request.authorization
-    valid = (
-        auth
-        and hmac.compare_digest(auth.username, SITE_USER)
-        and hmac.compare_digest(auth.password, SITE_PASSWORD)
-    )
-    if not valid:
-        return Response(
-            "Authentication required.",
-            401,
-            {"WWW-Authenticate": 'Basic realm="Her Room"'},
-        )
 
 
 def get_db():
     if "db" not in g:
         g.db = sqlite3.connect(DB_PATH)
         g.db.row_factory = sqlite3.Row
-        g.db.execute("PRAGMA foreign_keys = ON")
     return g.db
 
 
@@ -57,19 +25,15 @@ def close_db(exception=None):
 
 
 def init_db():
-    is_new = not os.path.exists(DB_PATH)
-    conn = sqlite3.connect(DB_PATH)
-    with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-        conn.executescript(f.read())
-    conn.commit()
-    if is_new:
-        seed(conn)
-    conn.close()
-
-
-def seed(conn):
+    # The repo (seed_data.py) is the single source of truth: the site is
+    # read-only and the database is rebuilt from seed data on every start,
+    # so content updates ship as git commits.
     from seed_data import CASES
 
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DROP TABLE IF EXISTS cases")
+    with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
+        conn.executescript(f.read())
     conn.executemany(
         """
         INSERT INTO cases
@@ -82,28 +46,7 @@ def seed(conn):
         CASES,
     )
     conn.commit()
-
-
-CASE_FIELDS = [
-    "name", "aliases", "period", "era", "location", "case_type", "silhouette",
-    "summary", "case_details", "psychological_profile", "sources",
-]
-
-
-def form_to_case(form):
-    return {
-        "name": form.get("name", "").strip(),
-        "aliases": form.get("aliases", "").strip(),
-        "period": form.get("period", "").strip(),
-        "era": form.get("era", "").strip(),
-        "location": form.get("location", "").strip(),
-        "case_type": form.get("case_type", "").strip(),
-        "silhouette": int(form.get("silhouette") or 0) % 4,
-        "summary": form.get("summary", "").strip(),
-        "case_details": form.get("case_details", "").strip(),
-        "psychological_profile": form.get("psychological_profile", "").strip(),
-        "sources": form.get("sources", "").strip(),
-    }
+    conn.close()
 
 
 @app.route("/")
@@ -154,60 +97,6 @@ def case_detail(case_id):
     if case is None:
         abort(404)
     return render_template("case_detail.html", case=case)
-
-
-@app.route("/case/new", methods=["GET", "POST"])
-def case_new():
-    if request.method == "POST":
-        data = form_to_case(request.form)
-        db = get_db()
-        cur = db.execute(
-            """
-            INSERT INTO cases
-                (name, aliases, period, era, location, case_type, silhouette,
-                 summary, case_details, psychological_profile, sources)
-            VALUES
-                (:name, :aliases, :period, :era, :location, :case_type, :silhouette,
-                 :summary, :case_details, :psychological_profile, :sources)
-            """,
-            data,
-        )
-        db.commit()
-        return redirect(url_for("case_detail", case_id=cur.lastrowid))
-    return render_template("case_form.html", case=None, action=url_for("case_new"))
-
-
-@app.route("/case/<int:case_id>/edit", methods=["GET", "POST"])
-def case_edit(case_id):
-    db = get_db()
-    case = db.execute("SELECT * FROM cases WHERE id = ?", (case_id,)).fetchone()
-    if case is None:
-        abort(404)
-    if request.method == "POST":
-        data = form_to_case(request.form)
-        data["id"] = case_id
-        db.execute(
-            """
-            UPDATE cases SET
-                name=:name, aliases=:aliases, period=:period, era=:era,
-                location=:location, case_type=:case_type, silhouette=:silhouette,
-                summary=:summary, case_details=:case_details,
-                psychological_profile=:psychological_profile, sources=:sources
-            WHERE id=:id
-            """,
-            data,
-        )
-        db.commit()
-        return redirect(url_for("case_detail", case_id=case_id))
-    return render_template("case_form.html", case=case, action=url_for("case_edit", case_id=case_id))
-
-
-@app.route("/case/<int:case_id>/delete", methods=["POST"])
-def case_delete(case_id):
-    db = get_db()
-    db.execute("DELETE FROM cases WHERE id = ?", (case_id,))
-    db.commit()
-    return redirect(url_for("index"))
 
 
 init_db()

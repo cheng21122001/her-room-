@@ -37,10 +37,6 @@
   </section>
 
   <div class="detail-actions">
-    <a href="{{ url_for('case_edit', case_id=case['id']) }}" class="btn-outline">编辑</a>
-    <form method="post" action="{{ url_for('case_delete', case_id=case['id']) }}" onsubmit="return confirm('确认删除该案例？');">
-      <button type="submit" class="btn-outline btn-danger">删除</button>
-    </form>
     <a href="{{ url_for('index') }}" class="btn-outline">返回列表</a>
   </div>
 </article>
