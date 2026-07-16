@@ -10,7 +10,11 @@ from flask import Flask, g, render_template, request, redirect, url_for, abort, 
 from seed_data import CASES, GLOSSARY
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "her_room.db")
+# On Vercel the project directory is read-only; /tmp is the writable area.
+if os.environ.get("VERCEL"):
+    DB_PATH = "/tmp/her_room.db"
+else:
+    DB_PATH = os.path.join(BASE_DIR, "her_room.db")
 SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
 
 GLOSSARY_BY_ID = {entry["id"]: entry for entry in GLOSSARY}
