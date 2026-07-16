@@ -14,13 +14,6 @@
       <label>年代分类<input type="text" name="era" placeholder="例如：20世纪90年代" value="{{ case['era'] if case else '' }}"></label>
       <label>地点<input type="text" name="location" value="{{ case['location'] if case else '' }}"></label>
       <label>案件类型<input type="text" name="case_type" placeholder="例如：连环杀人 / 诈骗谋财" value="{{ case['case_type'] if case else '' }}"></label>
-      <label>剪影样式
-        <select name="silhouette">
-          {% for i in range(4) %}
-          <option value="{{ i }}" {% if case and case['silhouette'] == i %}selected{% endif %}>样式 {{ i + 1 }}</option>
-          {% endfor %}
-        </select>
-      </label>
       <label>简述<textarea name="summary" rows="2">{{ case['summary'] if case else '' }}</textarea></label>
     </fieldset>
 

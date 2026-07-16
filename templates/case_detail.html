@@ -1,13 +1,8 @@
 {% extends "base.html" %}
-{% from "_silhouette.html" import silhouette %}
 {% block title %}{{ case['name'] }} · 与她的房间{% endblock %}
 {% block content %}
 
 <article class="case-detail">
-  <div class="detail-portrait">
-    {{ silhouette(case['silhouette'], "portrait-figure") }}
-  </div>
-
   <header class="detail-header">
     <h1 class="detail-name">{{ case['name'] }}</h1>
     {% if case['aliases'] %}<p class="detail-alias">{{ case['aliases'] }}</p>{% endif %}

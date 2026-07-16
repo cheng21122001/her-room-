@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% from "_silhouette.html" import silhouette %}
 {% block content %}
 
 <section class="search-panel">
@@ -37,9 +36,6 @@
 <section class="case-grid">
   {% for case in cases %}
   <a href="{{ url_for('case_detail', case_id=case['id']) }}" class="case-card {% if loop.index0 % 2 == 1 %}case-card--dark{% endif %}">
-    <div class="case-card-figure">
-      {{ silhouette(case['silhouette'], "card-figure") }}
-    </div>
     <div class="case-card-body">
       <h2 class="case-name">{{ case['name'] }}</h2>
       {% if case['aliases'] %}<p class="case-alias">{{ case['aliases'] }}</p>{% endif %}
