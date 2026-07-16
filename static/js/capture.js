@@ -69,6 +69,18 @@
       ]);
 
     output.textContent = lines.join("\n");
+
+    // 预填 GitHub issue：访客点开即是带代码的投稿页。
+    var githubBtn = document.getElementById("github-btn");
+    var title = "案例投稿：" + field("archive_no") + " " + field("name");
+    var body =
+      "以下案例条目由录入工具生成，请馆主审核后加入 `seed_data.py`：\n\n" +
+      "```python\n" + output.textContent + "\n```\n";
+    githubBtn.href =
+      githubBtn.dataset.repo +
+      "/issues/new?title=" + encodeURIComponent(title) +
+      "&body=" + encodeURIComponent(body);
+
     section.hidden = false;
     section.scrollIntoView({ behavior: "smooth" });
   });

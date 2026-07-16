@@ -5,7 +5,7 @@
 
 <section class="page-head">
   <h1 class="page-title">录入工具</h1>
-  <p class="page-sub">填写后生成代码片段，粘贴进仓库的 seed_data.py 并推送即可上线——本页不会直接修改任何数据。</p>
+  <p class="page-sub">填写后生成代码片段——本页不会直接修改任何数据，所有收录都经馆主审核后由仓库统一上线。</p>
 </section>
 
 <form class="case-form" id="capture-form" onsubmit="return false;">
@@ -69,13 +69,25 @@
 
 <section class="snippet-section" id="snippet-section" hidden>
   <h2 class="section-title">生成结果</h2>
-  <ol class="snippet-steps">
-    <li>复制下面的代码块</li>
-    <li>打开仓库中的 <code>seed_data.py</code>，粘贴到 <code>CASES = [ ... ]</code> 列表末尾（最后一个 <code>},</code> 之后、<code>]</code> 之前）</li>
-    <li>运行 <code>python validate.py</code> 确认通过，然后 <code>git push</code> 上线</li>
-  </ol>
+  <div class="snippet-paths">
+    <div class="snippet-path">
+      <h3 class="snippet-path-title">访客投稿</h3>
+      <p>点击下方"去 GitHub 投稿"，代码会自动填入投稿页（需要 GitHub 账号）；
+      或复制代码块，通过你与馆主的任意联系方式发送。经审核后收录。</p>
+    </div>
+    <div class="snippet-path">
+      <h3 class="snippet-path-title">馆主收录</h3>
+      <p>复制代码块，粘贴到仓库 <code>seed_data.py</code> 的 <code>CASES</code> 列表末尾
+      （最后一个 <code>},</code> 之后、<code>]</code> 之前），运行
+      <code>python validate.py</code> 确认通过后 <code>git push</code> 上线。</p>
+    </div>
+  </div>
   <div class="snippet-box">
-    <button type="button" class="btn-outline snippet-copy" id="copy-btn">复制</button>
+    <div class="snippet-toolbar">
+      <button type="button" class="btn-outline" id="copy-btn">复制</button>
+      <a class="btn-outline" id="github-btn" href="#" target="_blank" rel="noopener"
+         data-repo="https://github.com/riyeyuri07-web/her-room">去 GitHub 投稿 ↗</a>
+    </div>
     <pre id="snippet-output"></pre>
   </div>
 </section>

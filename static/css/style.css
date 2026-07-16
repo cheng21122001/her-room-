@@ -776,10 +776,38 @@ button, input, select, textarea {
 
 .snippet-section { max-width: 760px; margin: 3rem auto 0; }
 
-.snippet-steps { font-size: 0.9rem; padding-left: 1.5rem; margin-bottom: 1.5rem; }
-.snippet-steps code { border: 1px solid var(--black); padding: 0 0.35rem; font-size: 0.8rem; }
+.snippet-paths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--black);
+  border: var(--rule);
+  margin-bottom: 1.5rem;
+}
 
-.snippet-box { position: relative; border: 2px solid var(--black); }
+.snippet-path { background: var(--white); padding: 1.25rem 1.5rem; }
+.snippet-path:last-child { background: var(--black); color: var(--white); }
+.snippet-path:last-child code { border-color: var(--white); }
+
+.snippet-path-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.snippet-path p { margin: 0; font-size: 0.85rem; }
+.snippet-path code { border: 1px solid var(--black); padding: 0 0.35rem; font-size: 0.75rem; }
+
+.snippet-box { border: 2px solid var(--black); }
+
+.snippet-toolbar {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  border-bottom: 2px solid var(--black);
+}
 
 .snippet-box pre {
   margin: 0;
@@ -789,13 +817,6 @@ button, input, select, textarea {
   line-height: 1.6;
   background: var(--black);
   color: var(--white);
-}
-
-.snippet-copy {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  background: var(--white);
 }
 
 /* ---------------------------------- Responsive -------------------------------- */
