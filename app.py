@@ -1,11 +1,17 @@
+import json
 import os
+import random
 import sqlite3
 
-from flask import Flask, g, render_template, request, abort
+from flask import Flask, g, render_template, request, redirect, url_for, abort
+
+from seed_data import CASES, GLOSSARY
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "her_room.db")
 SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
+
+GLOSSARY_BY_ID = {entry["id"]: entry for entry in GLOSSARY}
 
 app = Flask(__name__)
 
@@ -28,33 +34,45 @@ def init_db():
     # The repo (seed_data.py) is the single source of truth: the site is
     # read-only and the database is rebuilt from seed data on every start,
     # so content updates ship as git commits.
-    from seed_data import CASES
-
     conn = sqlite3.connect(DB_PATH)
     conn.execute("DROP TABLE IF EXISTS cases")
     with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
         conn.executescript(f.read())
+    rows = [
+        {**case,
+         "timeline": json.dumps(case["timeline"], ensure_ascii=False),
+         "terms": json.dumps(case["terms"], ensure_ascii=False)}
+        for case in CASES
+    ]
     conn.executemany(
         """
         INSERT INTO cases
-            (name, aliases, period, era, location, case_type, silhouette,
-             summary, case_details, psychological_profile, sources)
+            (archive_no, name, aliases, period, era, region, year_start,
+             location, case_type, credibility, symbol, summary, case_details,
+             timeline, psychological_profile, terms, sources)
         VALUES
-            (:name, :aliases, :period, :era, :location, :case_type, :silhouette,
-             :summary, :case_details, :psychological_profile, :sources)
+            (:archive_no, :name, :aliases, :period, :era, :region, :year_start,
+             :location, :case_type, :credibility, :symbol, :summary, :case_details,
+             :timeline, :psychological_profile, :terms, :sources)
         """,
-        CASES,
+        rows,
     )
     conn.commit()
     conn.close()
 
 
 @app.route("/")
+def home():
+    return render_template("home.html")
+
+
+@app.route("/archive")
 def index():
     db = get_db()
     q = request.args.get("q", "").strip()
     era = request.args.get("era", "").strip()
     case_type = request.args.get("case_type", "").strip()
+    region = request.args.get("region", "").strip()
 
     sql = "SELECT * FROM cases WHERE 1=1"
     params = []
@@ -68,15 +86,17 @@ def index():
     if case_type:
         sql += " AND case_type = ?"
         params.append(case_type)
-    sql += " ORDER BY name COLLATE NOCASE"
+    if region:
+        sql += " AND region = ?"
+        params.append(region)
+    sql += " ORDER BY archive_no"
 
     cases = db.execute(sql, params).fetchall()
-    eras = [r["era"] for r in db.execute(
-        "SELECT DISTINCT era FROM cases WHERE era != '' ORDER BY era"
-    ).fetchall()]
-    case_types = [r["case_type"] for r in db.execute(
-        "SELECT DISTINCT case_type FROM cases WHERE case_type != '' ORDER BY case_type"
-    ).fetchall()]
+
+    def distinct(column):
+        return [r[column] for r in db.execute(
+            f"SELECT DISTINCT {column} FROM cases WHERE {column} != '' ORDER BY {column}"
+        ).fetchall()]
 
     return render_template(
         "index.html",
@@ -84,8 +104,10 @@ def index():
         q=q,
         era=era,
         case_type=case_type,
-        eras=eras,
-        case_types=case_types,
+        region=region,
+        eras=distinct("era"),
+        case_types=distinct("case_type"),
+        regions=distinct("region"),
         total=len(cases),
     )
 
@@ -96,7 +118,88 @@ def case_detail(case_id):
     case = db.execute("SELECT * FROM cases WHERE id = ?", (case_id,)).fetchone()
     if case is None:
         abort(404)
-    return render_template("case_detail.html", case=case)
+
+    timeline = json.loads(case["timeline"] or "[]")
+    terms = [GLOSSARY_BY_ID[t] for t in json.loads(case["terms"] or "[]")
+             if t in GLOSSARY_BY_ID]
+
+    # Closest cases by year among those sharing a type or region.
+    related = db.execute(
+        """
+        SELECT id, archive_no, name, era, case_type, symbol FROM cases
+        WHERE id != ? AND (case_type = ? OR region = ?)
+        ORDER BY ABS(year_start - ?) LIMIT 4
+        """,
+        (case_id, case["case_type"], case["region"], case["year_start"]),
+    ).fetchall()
+
+    return render_template(
+        "case_detail.html",
+        case=case,
+        timeline=timeline,
+        terms=terms,
+        related=related,
+    )
+
+
+@app.route("/timeline")
+def timeline():
+    db = get_db()
+    cases = db.execute(
+        "SELECT id, archive_no, name, period, era, region, case_type, symbol, "
+        "year_start, summary FROM cases ORDER BY year_start"
+    ).fetchall()
+    return render_template("timeline.html", cases=cases)
+
+
+@app.route("/stats")
+def stats():
+    db = get_db()
+
+    def counts(column):
+        rows = db.execute(
+            f"SELECT {column} AS label, COUNT(*) AS n FROM cases "
+            f"WHERE {column} != '' GROUP BY {column} ORDER BY n DESC, label"
+        ).fetchall()
+        peak = max((r["n"] for r in rows), default=1)
+        return [(r["label"], r["n"], round(r["n"] / peak * 100)) for r in rows]
+
+    total = db.execute("SELECT COUNT(*) FROM cases").fetchone()[0]
+    span = db.execute("SELECT MIN(year_start), MAX(year_start) FROM cases").fetchone()
+
+    return render_template(
+        "stats.html",
+        total=total,
+        span=span,
+        by_era=counts("era"),
+        by_type=counts("case_type"),
+        by_region=counts("region"),
+        by_credibility=counts("credibility"),
+    )
+
+
+@app.route("/glossary")
+def glossary():
+    db = get_db()
+    cases = db.execute(
+        "SELECT id, archive_no, name, terms FROM cases ORDER BY archive_no"
+    ).fetchall()
+    related_cases = {}
+    for case in cases:
+        for term_id in json.loads(case["terms"] or "[]"):
+            related_cases.setdefault(term_id, []).append(case)
+    return render_template(
+        "glossary.html", glossary=GLOSSARY, related_cases=related_cases
+    )
+
+
+@app.route("/random")
+def random_case():
+    db = get_db()
+    row = db.execute("SELECT id FROM cases ORDER BY RANDOM() LIMIT 1").fetchone()
+    if row is None:
+        return redirect(url_for("index"))
+    return redirect(url_for("case_detail", case_id=row["id"]))
 
 
 init_db()

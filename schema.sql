@@ -1,15 +1,21 @@
 CREATE TABLE IF NOT EXISTS cases (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    archive_no TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
     aliases TEXT,
     period TEXT,
     era TEXT,
+    region TEXT,
+    year_start INTEGER,
     location TEXT,
     case_type TEXT,
-    silhouette INTEGER DEFAULT 0,
+    credibility TEXT,
+    symbol TEXT,
     summary TEXT,
     case_details TEXT,
+    timeline TEXT,
     psychological_profile TEXT,
+    terms TEXT,
     sources TEXT,
     created_at TEXT DEFAULT (datetime('now'))
 );

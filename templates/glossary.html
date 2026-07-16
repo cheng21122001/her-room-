@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}词汇表 · 与她的房间{% endblock %}
+{% block content %}
+
+<section class="page-head">
+  <h1 class="page-title">词汇表</h1>
+  <p class="page-sub">案例中反复出现的犯罪学与司法术语</p>
+</section>
+
+<dl class="glossary">
+  {% for entry in glossary %}
+  <div class="glossary-entry {% if loop.index0 % 2 == 1 %}glossary-entry--dark{% endif %}" id="term-{{ entry['id'] }}">
+    <dt class="glossary-term">
+      {{ entry['term'] }}
+      <span class="glossary-term-en">{{ entry['term_en'] }}</span>
+    </dt>
+    <dd class="glossary-def">
+      <p>{{ entry['definition'] }}</p>
+      {% if related_cases.get(entry['id']) %}
+      <p class="glossary-related">
+        相关档案：
+        {% for c in related_cases[entry['id']] %}
+        <a href="{{ url_for('case_detail', case_id=c['id']) }}">{{ c['archive_no'] }} {{ c['name'] }}</a>{% if not loop.last %} · {% endif %}
+        {% endfor %}
+      </p>
+      {% endif %}
+    </dd>
+  </div>
+  {% endfor %}
+</dl>
+
+{% endblock %}

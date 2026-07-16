@@ -38,6 +38,67 @@ button, input, select, textarea {
   outline: none;
 }
 
+/* --------------------------------- Splash ---------------------------------- */
+
+.splash-body { overflow: hidden; }
+
+.splash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  cursor: pointer;
+}
+
+.splash-half {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.splash-half--black { background: var(--black); color: var(--white); }
+.splash-half--white { background: var(--white); color: var(--black); }
+
+.splash-word {
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  writing-mode: vertical-rl;
+}
+
+.splash-door {
+  width: 6px;
+  background: var(--white);
+  border-left: 2px solid var(--black);
+  border-right: 2px solid var(--black);
+  transition: width 0.4s;
+}
+
+.splash:hover .splash-door { width: 48px; }
+
+.splash-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8vh;
+  text-align: center;
+  mix-blend-mode: difference;
+  color: var(--white);
+}
+
+.splash-kicker {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.4em;
+}
+
+.splash-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.6em;
+}
+
 /* ---------------------------------- Header --------------------------------- */
 
 .site-header {
@@ -109,6 +170,10 @@ button, input, select, textarea {
   opacity: 0.75;
 }
 
+.page-head { text-align: center; margin-bottom: 3rem; }
+.page-title { margin: 0; font-size: 2rem; letter-spacing: 0.2em; }
+.page-sub { margin: 0.5rem 0 0; font-size: 0.85rem; letter-spacing: 0.12em; opacity: 0.65; }
+
 /* ------------------------------- Search panel ------------------------------ */
 
 .search-panel { text-align: center; margin-bottom: 3rem; }
@@ -162,6 +227,8 @@ button, input, select, textarea {
   opacity: 0.6;
 }
 
+.random-link { border-bottom: 1px solid var(--black); }
+
 /* --------------------------------- Case grid -------------------------------- */
 
 .case-grid {
@@ -174,7 +241,7 @@ button, input, select, textarea {
 .case-card {
   border-right: var(--rule);
   border-bottom: var(--rule);
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1.5rem 2rem;
   background: var(--white);
   color: var(--black);
   display: flex;
@@ -189,6 +256,18 @@ button, input, select, textarea {
   background: var(--black);
   color: var(--white);
 }
+
+.case-no {
+  margin: 0;
+  align-self: flex-start;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  opacity: 0.6;
+}
+
+.case-symbol-box { width: 56px; height: 56px; }
+.case-symbol { width: 100%; height: 100%; color: currentColor; }
 
 .case-name {
   margin: 0;
@@ -212,47 +291,62 @@ button, input, select, textarea {
   letter-spacing: 0.1em;
 }
 
+.tag--solid { background: currentColor; }
+.band--white .tag--solid, .detail-header .tag--solid { color: var(--white); background: var(--black); border-color: var(--black); }
+
 .case-summary { font-size: 0.9rem; opacity: 0.85; margin: 0; }
 
 .empty-state { grid-column: 1 / -1; text-align: center; padding: 3rem 0; opacity: 0.6; }
 
-/* -------------------------------- Case detail -------------------------------- */
+/* ------------------------------ Detail: bands ------------------------------- */
 
-.case-detail {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+.case-detail { display: flex; flex-direction: column; }
+
+.band {
+  width: 100vw;
+  margin: 0 calc(-50vw + 50%);
+  padding: 3rem 1.5rem;
 }
 
-.detail-header { border-bottom: var(--rule); padding-bottom: 1.75rem; margin-bottom: 2.5rem; width: 100%; max-width: 640px; }
+.band--white { background: var(--white); color: var(--black); --panel-bg: #ffffff; }
+.band--black { background: var(--black); color: var(--white); --panel-bg: #000000; }
+
+.band-inner { max-width: 640px; margin: 0 auto; }
+
+.detail-header-band { position: relative; overflow: hidden; padding-bottom: 3.5rem; }
+
+.giant-year {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(10rem, 30vw, 20rem);
+  font-weight: 600;
+  color: var(--white);
+  -webkit-text-stroke: 1px var(--black);
+  text-stroke: 1px var(--black);
+  opacity: 0.35;
+  pointer-events: none;
+  user-select: none;
+}
+
+.detail-header { position: relative; text-align: center; }
+
+.detail-no {
+  margin: 0 0 1rem;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.4em;
+}
+
+.detail-symbol { width: 64px; height: 64px; margin: 0 auto 1rem; }
 
 .detail-name { margin: 0; font-size: 2.2rem; letter-spacing: 0.08em; }
 .detail-alias { margin: 0.4rem 0 1rem; opacity: 0.65; font-style: italic; }
-.detail-tags { display: flex; justify-content: center; gap: 0.6rem; }
-
-.detail-section {
-  width: 100%;
-  max-width: 640px;
-  padding: 2.5rem 0;
-  border-bottom: var(--rule);
-}
-
-.detail-section:last-of-type { border-bottom: none; }
-
-.detail-section--dark {
-  background: var(--black);
-  color: var(--white);
-  max-width: 100%;
-  padding: 3rem 1.5rem;
-  margin: 0 calc(-50vw + 50%);
-  width: 100vw;
-}
-
-.detail-section--dark .section-title::before,
-.detail-section--dark .section-title::after { background: var(--white); }
-
-.detail-section--dark .section-body { max-width: 640px; margin-left: auto; margin-right: auto; }
+.detail-tags { display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
 
 .section-title {
   display: flex;
@@ -262,7 +356,7 @@ button, input, select, textarea {
   font-size: 0.85rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  margin: 0 0 1.5rem;
+  margin: 0 0 2rem;
 }
 
 .section-title::before, .section-title::after {
@@ -270,23 +364,236 @@ button, input, select, textarea {
   display: block;
   height: 1px;
   width: 2.5rem;
-  background: var(--black);
+  background: currentColor;
 }
 
 .section-body { margin: 0; text-align: left; font-size: 1rem; }
 .section-body--sources { font-size: 0.85rem; opacity: 0.75; }
 
 .info-list { margin: 0; text-align: left; }
-.info-row { display: flex; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px dotted rgba(0,0,0,0.3); }
+.info-row { display: flex; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px dotted currentColor; }
 .info-row dt { flex: 0 0 4.5rem; font-weight: 600; letter-spacing: 0.05em; }
 .info-row dd { margin: 0; flex: 1; }
+
+/* ---------------------------- Vertical timelines ---------------------------- */
+
+.event-timeline, .century-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.event-timeline::before, .century-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: currentColor;
+}
+
+.event, .century-item {
+  position: relative;
+  width: 50%;
+  padding: 0.9rem 2rem 0.9rem 0;
+  text-align: right;
+}
+
+.event--right, .century-item--right {
+  margin-left: 50%;
+  padding: 0.9rem 0 0.9rem 2rem;
+  text-align: left;
+}
+
+.event-dot {
+  position: absolute;
+  top: 1.45rem;
+  right: -4.5px;
+  width: 9px;
+  height: 9px;
+  background: currentColor;
+}
+
+.event--right .event-dot, .century-item--right .event-dot { right: auto; left: -4.5px; }
+.century-item .event-dot { right: -4.5px; }
+.century-item--right .event-dot { right: auto; left: -4.5px; }
+
+.event-date {
+  display: block;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+}
+
+.event-text { display: block; font-size: 0.9rem; opacity: 0.9; }
+
+.case-details-fold { margin-top: 2.5rem; border: var(--rule); padding: 1rem 1.25rem; }
+.case-details-fold summary {
+  cursor: pointer;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+}
+.case-details-fold[open] summary { margin-bottom: 1rem; }
+
+/* Century timeline (overview page) */
+
+.century-year {
+  display: block;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.century-card { display: block; }
+.century-card:hover .century-name { border-bottom: 1px solid currentColor; }
+
+.century-symbol {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  margin: 0.3rem 0;
+}
+
+.century-no {
+  display: block;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  opacity: 0.6;
+}
+
+.century-name { display: inline-block; font-size: 1.15rem; letter-spacing: 0.05em; }
+.century-meta { display: block; font-size: 0.78rem; opacity: 0.65; }
+
+.century-item, .century-item--right { display: flex; flex-direction: column; align-items: flex-end; }
+.century-item--right { align-items: flex-start; }
+.century-item .century-symbol { align-self: flex-end; }
+.century-item--right .century-symbol { align-self: flex-start; }
+
+/* ------------------------------- Term links -------------------------------- */
+
+.term-links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.term-link {
+  border: 1px solid currentColor;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+}
+
+.term-link:hover { background: var(--black); color: var(--white); }
+.band--black .term-link:hover { background: var(--white); color: var(--black); }
+
+/* ------------------------------ Related cases ------------------------------- */
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1px;
+  background: currentColor;
+  border: 1px solid currentColor;
+}
+
+.related-card {
+  background: var(--black);
+  color: var(--white);
+  padding: 1.25rem 0.75rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.related-card:hover { background: var(--white); color: var(--black); --panel-bg: #ffffff; }
+
+.related-symbol { width: 32px; height: 32px; }
+.related-no { font-family: "Cormorant Garamond", serif; font-size: 0.7rem; letter-spacing: 0.25em; opacity: 0.6; }
+.related-name { font-size: 0.95rem; letter-spacing: 0.05em; }
+.related-meta { font-size: 0.7rem; opacity: 0.65; }
 
 .detail-actions {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin-top: 3rem;
 }
+
+/* --------------------------------- Stats ----------------------------------- */
+
+.stat-block { max-width: 640px; margin: 0 auto 3.5rem; }
+
+.bar-chart { margin: 0; }
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.4rem 0;
+}
+
+.bar-label {
+  flex: 0 0 10rem;
+  text-align: right;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.bar-track {
+  flex: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-left: 2px solid var(--black);
+  padding-left: 2px;
+}
+
+.bar { display: block; height: 1.1rem; background: var(--black); min-width: 2px; }
+
+.bar-count { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 0.95rem; }
+
+/* -------------------------------- Glossary --------------------------------- */
+
+.glossary { margin: 0; border: 2px solid var(--black); }
+
+.glossary-entry { padding: 2rem 2rem 2.25rem; background: var(--white); color: var(--black); }
+
+.glossary-entry--dark { background: var(--black); color: var(--white); }
+
+.glossary-term {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.glossary-term-en {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.glossary-def { margin: 0.75rem 0 0; }
+.glossary-def p { margin: 0; font-size: 0.95rem; }
+
+.glossary-related { margin-top: 0.75rem !important; font-size: 0.8rem !important; opacity: 0.75; }
+.glossary-related a { border-bottom: 1px solid currentColor; }
 
 /* ---------------------------------- Responsive -------------------------------- */
 
@@ -295,4 +602,21 @@ button, input, select, textarea {
   .header-emblem { gap: 0.75rem; }
   .site-title { letter-spacing: 0.06em; }
   .case-grid { grid-template-columns: 1fr; }
+  .nav-divider { margin: 0 0.4rem; }
+
+  /* 单列时间轴 */
+  .event-timeline::before, .century-timeline::before { left: 4px; }
+  .event, .century-item,
+  .event--right, .century-item--right {
+    width: 100%;
+    margin-left: 0;
+    padding: 0.9rem 0 0.9rem 1.75rem;
+    text-align: left;
+    align-items: flex-start;
+  }
+  .event .event-dot, .century-item .event-dot,
+  .event--right .event-dot, .century-item--right .event-dot { right: auto; left: 0; }
+  .century-item .century-symbol { align-self: flex-start; }
+  .bar-label { flex-basis: 6.5rem; font-size: 0.75rem; }
+  .splash-word { letter-spacing: 0.12em; }
 }

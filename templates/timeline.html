@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_symbols.html" import symbol %}
+{% block title %}时间线 · 与她的房间{% endblock %}
+{% block content %}
+
+<section class="page-head">
+  <h1 class="page-title">时间线</h1>
+  <p class="page-sub">{{ cases[0]['year_start'] if cases }} — {{ cases[-1]['year_start'] if cases }} · 按案发年代排列</p>
+</section>
+
+<ol class="century-timeline">
+  {% for case in cases %}
+  <li class="century-item {% if loop.index0 % 2 == 1 %}century-item--right{% endif %}">
+    <span class="century-year">{{ case['year_start'] }}</span>
+    <span class="event-dot" aria-hidden="true"></span>
+    <a class="century-card" href="{{ url_for('case_detail', case_id=case['id']) }}">
+      <span class="century-symbol">{{ symbol(case['symbol']) }}</span>
+      <span class="century-no">{{ case['archive_no'] }}</span>
+      <span class="century-name">{{ case['name'] }}</span>
+      <span class="century-meta">{{ case['period'] }} · {{ case['region'] }} · {{ case['case_type'] }}</span>
+    </a>
+  </li>
+  {% endfor %}
+</ol>
+
+{% endblock %}

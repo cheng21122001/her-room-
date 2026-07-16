@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>与她的房间</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="splash-body">
+<a href="{{ url_for('index') }}" class="splash" aria-label="进入档案">
+  <div class="splash-half splash-half--black">
+    <span class="splash-word">与她</span>
+  </div>
+  <div class="splash-door" aria-hidden="true"></div>
+  <div class="splash-half splash-half--white">
+    <span class="splash-word">的房间</span>
+  </div>
+  <div class="splash-meta">
+    <p class="splash-kicker">IN HER ROOM · A CASE ARCHIVE</p>
+    <p class="splash-hint">推 门 而 入</p>
+  </div>
+</a>
+</body>
+</html>

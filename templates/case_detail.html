@@ -1,44 +1,102 @@
 {% extends "base.html" %}
-{% block title %}{{ case['name'] }} · 与她的房间{% endblock %}
+{% from "_symbols.html" import symbol %}
+{% block title %}{{ case['archive_no'] }} {{ case['name'] }} · 与她的房间{% endblock %}
 {% block content %}
 
 <article class="case-detail">
-  <header class="detail-header">
-    <h1 class="detail-name">{{ case['name'] }}</h1>
-    {% if case['aliases'] %}<p class="detail-alias">{{ case['aliases'] }}</p>{% endif %}
-    <div class="detail-tags">
-      <span class="tag">{{ case['era'] }}</span>
-      <span class="tag">{{ case['case_type'] }}</span>
+
+  <header class="band band--white detail-header-band">
+    <p class="giant-year" aria-hidden="true">{{ case['year_start'] }}</p>
+    <div class="band-inner detail-header">
+      <p class="detail-no">{{ case['archive_no'] }}</p>
+      <div class="detail-symbol">{{ symbol(case['symbol']) }}</div>
+      <h1 class="detail-name">{{ case['name'] }}</h1>
+      {% if case['aliases'] %}<p class="detail-alias">{{ case['aliases'] }}</p>{% endif %}
+      <div class="detail-tags">
+        <span class="tag">{{ case['era'] }}</span>
+        <span class="tag">{{ case['case_type'] }}</span>
+        <span class="tag tag--solid">{{ case['credibility'] }}</span>
+      </div>
     </div>
   </header>
 
-  <section class="detail-section detail-basic">
-    <h2 class="section-title">基础信息</h2>
-    <dl class="info-list">
-      <div class="info-row"><dt>时间</dt><dd>{{ case['period'] }}</dd></div>
-      <div class="info-row"><dt>地点</dt><dd>{{ case['location'] }}</dd></div>
-      <div class="info-row"><dt>简述</dt><dd>{{ case['summary'] }}</dd></div>
-    </dl>
+  <section class="band band--black">
+    <div class="band-inner">
+      <h2 class="section-title">基础信息</h2>
+      <dl class="info-list">
+        <div class="info-row"><dt>时间</dt><dd>{{ case['period'] }}</dd></div>
+        <div class="info-row"><dt>地点</dt><dd>{{ case['location'] }}</dd></div>
+        <div class="info-row"><dt>地区</dt><dd>{{ case['region'] }}</dd></div>
+        <div class="info-row"><dt>简述</dt><dd>{{ case['summary'] }}</dd></div>
+      </dl>
+    </div>
   </section>
 
-  <section class="detail-section detail-narrative">
-    <h2 class="section-title">案件经过与判决</h2>
-    <p class="section-body">{{ case['case_details'] }}</p>
+  <section class="band band--white">
+    <div class="band-inner">
+      <h2 class="section-title">案件时间线</h2>
+      <ol class="event-timeline">
+        {% for date, event in timeline %}
+        <li class="event {% if loop.index0 % 2 == 1 %}event--right{% endif %}">
+          <span class="event-date">{{ date }}</span>
+          <span class="event-dot" aria-hidden="true"></span>
+          <span class="event-text">{{ event }}</span>
+        </li>
+        {% endfor %}
+      </ol>
+      <details class="case-details-fold">
+        <summary>展开完整案情记述</summary>
+        <p class="section-body">{{ case['case_details'] }}</p>
+      </details>
+    </div>
   </section>
 
-  <section class="detail-section detail-profile detail-section--dark">
-    <h2 class="section-title">心理 / 动机侧写</h2>
-    <p class="section-body">{{ case['psychological_profile'] }}</p>
+  <section class="band band--black">
+    <div class="band-inner">
+      <h2 class="section-title">心理 / 动机侧写</h2>
+      <p class="section-body">{{ case['psychological_profile'] }}</p>
+    </div>
   </section>
 
-  <section class="detail-section detail-sources">
-    <h2 class="section-title">资料来源</h2>
-    <p class="section-body section-body--sources">{{ case['sources'] }}</p>
+  <section class="band band--white">
+    <div class="band-inner">
+      <h2 class="section-title">资料来源</h2>
+      <p class="section-body section-body--sources">{{ case['sources'] }}</p>
+      {% if terms %}
+      <div class="term-links">
+        {% for t in terms %}
+        <a class="term-link" href="{{ url_for('glossary') }}#term-{{ t['id'] }}">{{ t['term'] }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
   </section>
 
-  <div class="detail-actions">
-    <a href="{{ url_for('index') }}" class="btn-outline">返回列表</a>
+  {% if related %}
+  <section class="band band--black">
+    <div class="band-inner">
+      <h2 class="section-title">相关档案</h2>
+      <div class="related-grid">
+        {% for r in related %}
+        <a class="related-card" href="{{ url_for('case_detail', case_id=r['id']) }}">
+          <span class="related-symbol">{{ symbol(r['symbol']) }}</span>
+          <span class="related-no">{{ r['archive_no'] }}</span>
+          <span class="related-name">{{ r['name'] }}</span>
+          <span class="related-meta">{{ r['era'] }} · {{ r['case_type'] }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <div class="band band--white">
+    <div class="band-inner detail-actions">
+      <a href="{{ url_for('index') }}" class="btn-outline">返回档案</a>
+      <a href="{{ url_for('random_case') }}" class="btn-outline">随机翻阅</a>
+    </div>
   </div>
+
 </article>
 
 {% endblock %}

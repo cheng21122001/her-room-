@@ -21,7 +21,15 @@
     {{ silhouette(0, "emblem-figure emblem-right") }}
   </div>
   <nav class="site-nav">
-    <a href="{{ url_for('index') }}">全部案例</a>
+    <a href="{{ url_for('index') }}">档案</a>
+    <span class="nav-divider">/</span>
+    <a href="{{ url_for('timeline') }}">时间线</a>
+    <span class="nav-divider">/</span>
+    <a href="{{ url_for('stats') }}">统计</a>
+    <span class="nav-divider">/</span>
+    <a href="{{ url_for('glossary') }}">词汇表</a>
+    <span class="nav-divider">/</span>
+    <a href="{{ url_for('random_case') }}">随机翻阅</a>
   </nav>
 </header>
 

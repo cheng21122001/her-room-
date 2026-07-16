@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}统计 · 与她的房间{% endblock %}
+{% block content %}
+
+<section class="page-head">
+  <h1 class="page-title">统计</h1>
+  <p class="page-sub">共 {{ total }} 份档案 · 时间跨度 {{ span[0] }} — {{ span[1] }}</p>
+</section>
+
+{% macro chart(title, rows) %}
+<section class="stat-block">
+  <h2 class="section-title">{{ title }}</h2>
+  <dl class="bar-chart">
+    {% for label, n, pct in rows %}
+    <div class="bar-row">
+      <dt class="bar-label">{{ label }}</dt>
+      <dd class="bar-track">
+        <span class="bar" style="width: {{ pct }}%"></span>
+        <span class="bar-count">{{ n }}</span>
+      </dd>
+    </div>
+    {% endfor %}
+  </dl>
+</section>
+{% endmacro %}
+
+{{ chart("按年代", by_era) }}
+{{ chart("按案件类型", by_type) }}
+{{ chart("按地区", by_region) }}
+{{ chart("按司法结果", by_credibility) }}
+
+{% endblock %}

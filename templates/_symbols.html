@@ -1,0 +1,77 @@
+{# 案件象征符号 — 极简黑白剪影，负空间用 --panel-bg（默认白）镂空。
+   可选值：tower 塔楼 / envelope 信件 / gun 手枪 / road 公路 / flame 火焰
+          tape 录音带 / house 房屋 / camera 摄像机 / shovel 铁锹 / poison 毒药瓶 #}
+{% macro symbol(name, cls="") %}
+<svg class="case-symbol {{ cls }}" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  {% if name == "tower" %}
+  <g fill="currentColor">
+    <rect x="34" y="34" width="32" height="56"/>
+    <rect x="30" y="22" width="10" height="14"/>
+    <rect x="45" y="22" width="10" height="14"/>
+    <rect x="60" y="22" width="10" height="14"/>
+    <rect x="30" y="86" width="40" height="4"/>
+    <rect fill="var(--panel-bg, #fff)" x="46" y="46" width="8" height="20"/>
+  </g>
+  {% elif name == "envelope" %}
+  <g fill="currentColor">
+    <rect x="14" y="28" width="72" height="46"/>
+    <polygon fill="var(--panel-bg, #fff)" points="17,31 50,56 83,31 83,36 50,62 17,36"/>
+  </g>
+  {% elif name == "gun" %}
+  <g fill="currentColor">
+    <rect x="16" y="38" width="62" height="12"/>
+    <polygon points="26,50 46,50 42,80 28,80"/>
+    <rect x="46" y="50" width="8" height="8"/>
+    <rect x="78" y="38" width="6" height="8"/>
+  </g>
+  {% elif name == "road" %}
+  <g fill="currentColor">
+    <polygon points="42,12 58,12 82,90 18,90"/>
+    <polygon fill="var(--panel-bg, #fff)" points="49,18 51,18 51.5,32 48.5,32"/>
+    <polygon fill="var(--panel-bg, #fff)" points="48,44 52,44 53,60 47,60"/>
+    <polygon fill="var(--panel-bg, #fff)" points="46.5,72 53.5,72 55,90 45,90"/>
+  </g>
+  {% elif name == "flame" %}
+  <g fill="currentColor">
+    <path d="M50,8 C58,26 76,36 76,58 C76,78 64,90 50,90 C36,90 24,78 24,58 C24,44 34,36 38,26 C42,34 46,36 48,32 C50,28 48,18 50,8 Z"/>
+    <path fill="var(--panel-bg, #fff)" d="M50,52 C55,62 62,64 62,72 C62,80 56,84 50,84 C44,84 38,80 38,72 C38,64 45,62 50,52 Z"/>
+  </g>
+  {% elif name == "tape" %}
+  <g fill="currentColor">
+    <rect x="12" y="28" width="76" height="44"/>
+    <circle fill="var(--panel-bg, #fff)" cx="34" cy="50" r="8"/>
+    <circle fill="var(--panel-bg, #fff)" cx="66" cy="50" r="8"/>
+    <rect fill="var(--panel-bg, #fff)" x="42" y="47" width="16" height="6"/>
+  </g>
+  {% elif name == "house" %}
+  <g fill="currentColor">
+    <polygon points="50,10 90,44 84,44 84,90 16,90 16,44 10,44"/>
+    <rect fill="var(--panel-bg, #fff)" x="43" y="58" width="14" height="32"/>
+    <rect fill="var(--panel-bg, #fff)" x="24" y="52" width="12" height="12"/>
+    <rect fill="var(--panel-bg, #fff)" x="64" y="52" width="12" height="12"/>
+  </g>
+  {% elif name == "camera" %}
+  <g fill="currentColor">
+    <rect x="14" y="36" width="48" height="34"/>
+    <polygon points="66,44 86,34 86,72 66,62"/>
+    <circle cx="26" cy="26" r="10"/>
+    <circle cx="48" cy="26" r="10"/>
+    <circle fill="var(--panel-bg, #fff)" cx="26" cy="26" r="4"/>
+    <circle fill="var(--panel-bg, #fff)" cx="48" cy="26" r="4"/>
+  </g>
+  {% elif name == "shovel" %}
+  <g fill="currentColor">
+    <rect x="38" y="8" width="24" height="8"/>
+    <rect x="46" y="8" width="8" height="46"/>
+    <path d="M34,54 L66,54 L66,74 C66,86 58,92 50,92 C42,92 34,86 34,74 Z"/>
+  </g>
+  {% elif name == "poison" %}
+  <g fill="currentColor">
+    <rect x="40" y="8" width="20" height="8"/>
+    <rect x="44" y="16" width="12" height="12"/>
+    <path d="M44,28 C30,34 24,44 24,58 C24,78 36,90 50,90 C64,90 76,78 76,58 C76,44 70,34 56,28 Z"/>
+    <polygon fill="var(--panel-bg, #fff)" points="38,48 42,44 50,52 58,44 62,48 54,56 62,64 58,68 50,60 42,68 38,64 46,56"/>
+  </g>
+  {% endif %}
+</svg>
+{% endmacro %}
