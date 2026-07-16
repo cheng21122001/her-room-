@@ -11,6 +11,11 @@ SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
 SITE_USER = os.environ.get("SITE_USER")
 SITE_PASSWORD = os.environ.get("SITE_PASSWORD")
 
+# Anyone can browse and submit new cases; only editing/deleting existing
+# entries requires the site password, so public contributions can't be
+# vandalized or wiped by other visitors.
+AUTH_REQUIRED_ENDPOINTS = {"case_edit", "case_delete"}
+
 app = Flask(__name__)
 
 
@@ -19,6 +24,8 @@ def require_auth():
     # Auth is only enforced when SITE_USER/SITE_PASSWORD are set (e.g. in production).
     # Local development without those env vars stays open.
     if not SITE_USER or not SITE_PASSWORD:
+        return
+    if request.endpoint not in AUTH_REQUIRED_ENDPOINTS:
         return
     auth = request.authorization
     valid = (
