@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "_silhouette.html" import silhouette %}
+{% block content %}
+
+<section class="search-panel">
+  <form method="get" action="{{ url_for('index') }}" class="search-form">
+    <input
+      type="text"
+      name="q"
+      value="{{ q }}"
+      placeholder="按姓名 / 别名 / 案情关键词检索……"
+      class="search-input"
+      autocomplete="off"
+    >
+    <div class="filter-row">
+      <select name="era" class="filter-select" onchange="this.form.submit()">
+        <option value="">全部年代</option>
+        {% for e in eras %}
+        <option value="{{ e }}" {% if e == era %}selected{% endif %}>{{ e }}</option>
+        {% endfor %}
+      </select>
+      <select name="case_type" class="filter-select" onchange="this.form.submit()">
+        <option value="">全部类型</option>
+        {% for c in case_types %}
+        <option value="{{ c }}" {% if c == case_type %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn-search">检索</button>
+      {% if q or era or case_type %}
+      <a href="{{ url_for('index') }}" class="btn-clear">清除筛选</a>
+      {% endif %}
+    </div>
+  </form>
+  <p class="result-count">共收录 {{ total }} 例</p>
+</section>
+
+<section class="case-grid">
+  {% for case in cases %}
+  <a href="{{ url_for('case_detail', case_id=case['id']) }}" class="case-card {% if loop.index0 % 2 == 1 %}case-card--dark{% endif %}">
+    <div class="case-card-figure">
+      {{ silhouette(case['silhouette'], "card-figure") }}
+    </div>
+    <div class="case-card-body">
+      <h2 class="case-name">{{ case['name'] }}</h2>
+      {% if case['aliases'] %}<p class="case-alias">{{ case['aliases'] }}</p>{% endif %}
+      <div class="case-tags">
+        <span class="tag">{{ case['era'] }}</span>
+        <span class="tag">{{ case['case_type'] }}</span>
+      </div>
+      <p class="case-summary">{{ case['summary'] }}</p>
+    </div>
+  </a>
+  {% else %}
+  <p class="empty-state">没有找到符合条件的案例。</p>
+  {% endfor %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}与她的房间{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  {% from "_silhouette.html" import silhouette %}
+  <div class="header-emblem">
+    {{ silhouette(0, "emblem-figure emblem-left") }}
+    <div class="header-title-block">
+      <p class="kicker">EST. {{ ' ' }}真实犯罪档案</p>
+      <h1 class="site-title"><a href="{{ url_for('index') }}">与她的房间</a></h1>
+      <p class="kicker">IN HER ROOM · A CASE ARCHIVE</p>
+    </div>
+    {{ silhouette(0, "emblem-figure emblem-right") }}
+  </div>
+  <nav class="site-nav">
+    <a href="{{ url_for('index') }}">全部案例</a>
+    <span class="nav-divider">/</span>
+    <a href="{{ url_for('case_new') }}">录入新案例</a>
+  </nav>
+</header>
+
+<main class="site-main">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <p>本档案仅供个人研究与检索使用 · 内容整理自公开司法记录、新闻报道与出版物</p>
+</footer>
+</body>
+</html>

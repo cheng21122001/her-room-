@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+her_room.db
+.env
+.DS_Store

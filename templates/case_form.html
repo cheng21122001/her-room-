@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{% if case %}编辑案例{% else %}录入新案例{% endif %} · 与她的房间{% endblock %}
+{% block content %}
+
+<section class="case-form-section">
+  <h1 class="form-title">{% if case %}编辑案例{% else %}录入新案例{% endif %}</h1>
+
+  <form method="post" action="{{ action }}" class="case-form">
+    <fieldset class="form-fieldset">
+      <legend>基础信息</legend>
+      <label>姓名<input type="text" name="name" required value="{{ case['name'] if case else '' }}"></label>
+      <label>别名<input type="text" name="aliases" value="{{ case['aliases'] if case else '' }}"></label>
+      <label>时间<input type="text" name="period" placeholder="例如：1989–1990年" value="{{ case['period'] if case else '' }}"></label>
+      <label>年代分类<input type="text" name="era" placeholder="例如：20世纪90年代" value="{{ case['era'] if case else '' }}"></label>
+      <label>地点<input type="text" name="location" value="{{ case['location'] if case else '' }}"></label>
+      <label>案件类型<input type="text" name="case_type" placeholder="例如：连环杀人 / 诈骗谋财" value="{{ case['case_type'] if case else '' }}"></label>
+      <label>剪影样式
+        <select name="silhouette">
+          {% for i in range(4) %}
+          <option value="{{ i }}" {% if case and case['silhouette'] == i %}selected{% endif %}>样式 {{ i + 1 }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>简述<textarea name="summary" rows="2">{{ case['summary'] if case else '' }}</textarea></label>
+    </fieldset>
+
+    <fieldset class="form-fieldset">
+      <legend>案件经过与判决</legend>
+      <textarea name="case_details" rows="6">{{ case['case_details'] if case else '' }}</textarea>
+    </fieldset>
+
+    <fieldset class="form-fieldset">
+      <legend>心理 / 动机侧写</legend>
+      <textarea name="psychological_profile" rows="6">{{ case['psychological_profile'] if case else '' }}</textarea>
+    </fieldset>
+
+    <fieldset class="form-fieldset">
+      <legend>资料来源标注</legend>
+      <textarea name="sources" rows="3" placeholder="书籍 / 庭审记录 / 新闻报道 / 纪录片……">{{ case['sources'] if case else '' }}</textarea>
+    </fieldset>
+
+    <div class="detail-actions">
+      <button type="submit" class="btn-outline">保存</button>
+      <a href="{{ url_for('index') if not case else url_for('case_detail', case_id=case['id']) }}" class="btn-outline">取消</a>
+    </div>
+  </form>
+</section>
+
+{% endblock %}

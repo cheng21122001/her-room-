@@ -1,0 +1,32 @@
+{% macro silhouette(index=0, cls="") %}
+{% set i = index % 4 %}
+<svg class="silhouette {{ cls }}" viewBox="0 0 120 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  {% if i == 0 %}
+  <g fill="currentColor">
+    <ellipse cx="60" cy="22" rx="13" ry="15" transform="rotate(8 60 22)"/>
+    <rect x="54" y="34" width="12" height="10"/>
+    <polygon points="40,44 80,44 93,224 27,224"/>
+    <ellipse cx="60" cy="112" rx="9" ry="13"/>
+  </g>
+  {% elif i == 1 %}
+  <g fill="currentColor">
+    <ellipse cx="52" cy="34" rx="13" ry="15"/>
+    <path d="M30,58 Q8,118 30,178 Q60,212 92,178 Q112,138 90,98 Q78,66 58,58 Q44,53 30,58 Z"/>
+  </g>
+  {% elif i == 2 %}
+  <g fill="currentColor">
+    <ellipse cx="58" cy="30" rx="12" ry="14" transform="rotate(-6 58 30)"/>
+    <polygon points="50,44 70,44 78,140 60,235 42,235 34,140"/>
+    <polygon points="70,50 96,16 102,26 80,66"/>
+    <polygon points="50,148 20,188 30,200 55,163"/>
+  </g>
+  {% else %}
+  <g fill="currentColor">
+    <ellipse cx="60" cy="25" rx="12" ry="14" transform="rotate(-10 60 25)"/>
+    <polygon points="38,44 82,44 90,224 30,224"/>
+    <polygon fill="var(--panel-bg, #fff)" points="35,68 85,94 85,110 35,84"/>
+    <polygon fill="var(--panel-bg, #fff)" points="85,68 35,94 35,110 85,84"/>
+  </g>
+  {% endif %}
+</svg>
+{% endmacro %}

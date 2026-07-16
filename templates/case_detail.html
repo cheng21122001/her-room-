@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_silhouette.html" import silhouette %}
+{% block title %}{{ case['name'] }} · 与她的房间{% endblock %}
+{% block content %}
+
+<article class="case-detail">
+  <div class="detail-portrait">
+    {{ silhouette(case['silhouette'], "portrait-figure") }}
+  </div>
+
+  <header class="detail-header">
+    <h1 class="detail-name">{{ case['name'] }}</h1>
+    {% if case['aliases'] %}<p class="detail-alias">{{ case['aliases'] }}</p>{% endif %}
+    <div class="detail-tags">
+      <span class="tag">{{ case['era'] }}</span>
+      <span class="tag">{{ case['case_type'] }}</span>
+    </div>
+  </header>
+
+  <section class="detail-section detail-basic">
+    <h2 class="section-title">基础信息</h2>
+    <dl class="info-list">
+      <div class="info-row"><dt>时间</dt><dd>{{ case['period'] }}</dd></div>
+      <div class="info-row"><dt>地点</dt><dd>{{ case['location'] }}</dd></div>
+      <div class="info-row"><dt>简述</dt><dd>{{ case['summary'] }}</dd></div>
+    </dl>
+  </section>
+
+  <section class="detail-section detail-narrative">
+    <h2 class="section-title">案件经过与判决</h2>
+    <p class="section-body">{{ case['case_details'] }}</p>
+  </section>
+
+  <section class="detail-section detail-profile detail-section--dark">
+    <h2 class="section-title">心理 / 动机侧写</h2>
+    <p class="section-body">{{ case['psychological_profile'] }}</p>
+  </section>
+
+  <section class="detail-section detail-sources">
+    <h2 class="section-title">资料来源</h2>
+    <p class="section-body section-body--sources">{{ case['sources'] }}</p>
+  </section>
+
+  <div class="detail-actions">
+    <a href="{{ url_for('case_edit', case_id=case['id']) }}" class="btn-outline">编辑</a>
+    <form method="post" action="{{ url_for('case_delete', case_id=case['id']) }}" onsubmit="return confirm('确认删除该案例？');">
+      <button type="submit" class="btn-outline btn-danger">删除</button>
+    </form>
+    <a href="{{ url_for('index') }}" class="btn-outline">返回列表</a>
+  </div>
+</article>
+
+{% endblock %}
