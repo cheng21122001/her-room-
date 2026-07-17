@@ -3,7 +3,7 @@
 聚焦女性罪犯的真实犯罪案例档案网站。黑白剪影视觉，只读展示，
 数据以代码形式存放在仓库中（`seed_data.py`），网站启动时自动重建数据库。
 
-线上地址：https://her-room.onrender.com
+线上地址：https://her-room-gamma.vercel.app
 
 ## 本地运行
 
