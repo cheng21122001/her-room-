@@ -27,6 +27,16 @@ SYMBOL_CHOICES = [
 
 app = Flask(__name__)
 
+# 站点已迁移到 Vercel；旧的 Render 域名收到的请求一律 301 跳转到新址，
+# 这样发出去的旧链接仍然可用。
+CANONICAL_HOST = "her-room-gamma.vercel.app"
+
+
+@app.before_request
+def redirect_legacy_host():
+    if "onrender.com" in request.host:
+        return redirect(f"https://{CANONICAL_HOST}{request.full_path if request.query_string else request.path}", code=301)
+
 
 def get_db():
     if "db" not in g:
