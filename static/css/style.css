@@ -454,14 +454,14 @@ button, input, select, textarea {
 
 .event-text { display: block; font-size: 0.9rem; opacity: 0.9; }
 
-.case-details-fold { margin-top: 2.5rem; border: var(--rule); padding: 1rem 1.25rem; }
-.case-details-fold summary {
-  cursor: pointer;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-align: center;
+.story-para {
+  margin: 0 0 1.3em;
+  text-align: left;
+  font-size: 1rem;
+  line-height: 2;
 }
-.case-details-fold[open] summary { margin-bottom: 1rem; }
+.story-para:last-child { margin-bottom: 0; }
+.story-para::first-letter { font-size: 1.15em; font-weight: 600; }
 
 /* Century timeline (overview page) */
 
@@ -681,43 +681,6 @@ button, input, select, textarea {
 .overview-more a { border-bottom: 1px solid var(--black); }
 
 .bar-chart--compact .bar-label { flex-basis: 8rem; font-size: 0.78rem; }
-
-/* --------------------------------- Network --------------------------------- */
-
-.network-legend {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-}
-
-.legend-item { display: flex; align-items: center; gap: 0.5rem; }
-
-.legend-line { display: inline-block; width: 2.2rem; height: 0; border-top: 2px solid var(--black); }
-.legend-line--region { border-top-style: dashed; }
-.legend-line--term { border-top-width: 1px; border-top-style: dotted; }
-
-.network-frame { border: 2px solid var(--black); }
-
-.network-svg { width: 100%; height: auto; display: block; }
-
-.net-edge { stroke: var(--black); }
-.net-edge--type { stroke-width: 2; }
-.net-edge--region { stroke-width: 1.5; stroke-dasharray: 7 5; }
-.net-edge--term { stroke-width: 1; stroke-dasharray: 2 4; opacity: 0.6; }
-
-.net-node circle { fill: var(--black); }
-.net-node text {
-  fill: var(--black);
-  font-family: "Noto Serif SC", serif;
-  font-size: 15px;
-  letter-spacing: 0.05em;
-}
-.net-node-no { font-family: "Cormorant Garamond", serif; font-size: 11px; opacity: 0.55; }
-.net-node:hover circle { r: 10; }
-.net-node:hover text { text-decoration: underline; }
 
 /* ------------------------------ Capture form ------------------------------- */
 

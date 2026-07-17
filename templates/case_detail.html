@@ -34,6 +34,15 @@
 
   <section class="band band--white">
     <div class="band-inner">
+      <h2 class="section-title">案件全貌</h2>
+      {% for para in case['case_details'].split('\n\n') %}
+      <p class="story-para">{{ para }}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="band band--black">
+    <div class="band-inner">
       <h2 class="section-title">案件时间线</h2>
       <ol class="event-timeline">
         {% for date, event in timeline %}
@@ -44,21 +53,17 @@
         </li>
         {% endfor %}
       </ol>
-      <details class="case-details-fold">
-        <summary>展开完整案情记述</summary>
-        <p class="section-body">{{ case['case_details'] }}</p>
-      </details>
     </div>
   </section>
 
-  <section class="band band--black">
+  <section class="band band--white">
     <div class="band-inner">
       <h2 class="section-title">心理 / 动机侧写</h2>
       <p class="section-body">{{ case['psychological_profile'] }}</p>
     </div>
   </section>
 
-  <section class="band band--white">
+  <section class="band band--black">
     <div class="band-inner">
       <h2 class="section-title">资料来源</h2>
       <p class="section-body section-body--sources">{{ case['sources'] }}</p>
@@ -73,7 +78,7 @@
   </section>
 
   {% if related %}
-  <section class="band band--black">
+  <section class="band band--white">
     <div class="band-inner">
       <h2 class="section-title">相关档案</h2>
       <div class="related-grid">

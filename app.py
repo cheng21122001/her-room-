@@ -1,7 +1,6 @@
 import csv
 import io
 import json
-import math
 import os
 import sqlite3
 
@@ -205,52 +204,6 @@ def timeline():
         "year_start, summary FROM cases ORDER BY year_start"
     ).fetchall()
     return render_template("timeline.html", cases=cases)
-
-
-@app.route("/network")
-def network():
-    db = get_db()
-    cases = db.execute(
-        "SELECT id, archive_no, name, region, case_type, terms, year_start "
-        "FROM cases ORDER BY year_start"
-    ).fetchall()
-
-    # Circular layout computed server-side; nodes link to case pages.
-    width, height, radius = 900, 640, 250
-    cx, cy = width / 2, height / 2
-    nodes = []
-    for i, case in enumerate(cases):
-        angle = 2 * math.pi * i / max(len(cases), 1) - math.pi / 2
-        nodes.append({
-            "id": case["id"],
-            "archive_no": case["archive_no"],
-            "name": case["name"],
-            "x": cx + radius * math.cos(angle),
-            "y": cy + radius * math.sin(angle),
-            "align": "start" if math.cos(angle) > 0.3 else ("end" if math.cos(angle) < -0.3 else "middle"),
-            "terms": set(json.loads(case["terms"] or "[]")),
-            "region": case["region"],
-            "case_type": case["case_type"],
-        })
-
-    # One edge per pair, strongest relation wins: type > region > shared term.
-    edges = []
-    for i in range(len(nodes)):
-        for j in range(i + 1, len(nodes)):
-            a, b = nodes[i], nodes[j]
-            if a["case_type"] == b["case_type"]:
-                kind = "type"
-            elif a["region"] == b["region"]:
-                kind = "region"
-            elif a["terms"] & b["terms"]:
-                kind = "term"
-            else:
-                continue
-            edges.append({"x1": a["x"], "y1": a["y"], "x2": b["x"], "y2": b["y"], "kind": kind})
-
-    return render_template(
-        "network.html", nodes=nodes, edges=edges, width=width, height=height
-    )
 
 
 @app.route("/stats")
