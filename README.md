@@ -64,5 +64,6 @@ python app.py               # 打开 http://127.0.0.1:5001
 
 ## 部署
 
-推送到 GitHub `main` 分支即自动触发 Render 部署（配置见 `render.yaml`）。
+仓库：`cheng21122001/her-room-`（已连接 Vercel）。
+推送到 `main` 分支即自动触发 Vercel 部署，线上地址 https://her-room-gamma.vercel.app 。
 数据库无持久化需求：每次启动都由 `seed_data.py` 重建，仓库即唯一数据源。
