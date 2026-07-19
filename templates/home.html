@@ -11,51 +11,16 @@
 <body class="peep-body">
 
 <a href="{{ url_for('overview') }}" class="peep" id="peep" aria-label="推门进入档案">
-  <!-- 鱼眼窥孔：黑色镜筒中一枚圆形视野，望向走廊尽头的牢门 -->
-  <div class="peep-lens">
-    <div class="peep-scene">
-      <svg class="peep-door" viewBox="0 0 240 360" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <!-- 鱼眼桶形走廊：所有线条向外强烈弯曲 -->
-        <!-- 顶/底大弧，暗示天花与地面被镜片鼓起 -->
-        <path class="ln" d="M18,66 Q120,150 222,66"/>
-        <path class="ln" d="M18,294 Q120,210 222,294"/>
-        <!-- 四条透视缝线，弯曲收拢到牢门四角 -->
-        <path class="ln" d="M10,86 Q70,120 88,116"/>
-        <path class="ln" d="M230,86 Q170,120 152,116"/>
-        <path class="ln" d="M10,274 Q70,240 88,244"/>
-        <path class="ln" d="M230,274 Q170,240 152,244"/>
-        <!-- 侧墙内弯 -->
-        <path class="ln" d="M14,80 Q40,180 14,280"/>
-        <path class="ln" d="M226,80 Q200,180 226,280"/>
-
-        <!-- 牢门：四边向外鼓成桶形 -->
-        <g class="peep-door-leaf">
-          <path class="ln" d="M88,116 Q120,104 152,116 Q166,180 152,244 Q120,256 88,244 Q74,180 88,116 Z"/>
-          <!-- 门上小窗与铁栏（随门面弯曲） -->
-          <path class="ln" d="M102,132 Q120,127 138,132 Q140,146 138,160 Q120,165 102,160 Q100,146 102,132 Z"/>
-          <path class="ln" d="M112,130 Q113,146 112,162"/>
-          <path class="ln" d="M120,129 Q121,146 120,163"/>
-          <path class="ln" d="M128,130 Q129,146 128,162"/>
-          <!-- 号牌 -->
-          <path class="ln" d="M105,172 Q120,169 135,172 L135,188 Q120,191 105,188 Z"/>
-          <text class="peep-plate" x="120" y="184" text-anchor="middle">HER</text>
-          <!-- 门板分格与门闩 -->
-          <path class="ln" d="M96,198 Q120,193 144,198 Q146,210 144,222 Q120,227 96,222 Q94,210 96,198 Z"/>
-          <path class="ln" d="M96,230 Q120,226 144,230 Q145,236 144,242 Q120,247 96,242 Q95,236 96,230 Z"/>
-          <circle class="ln peep-knob" cx="150" cy="210" r="4"/>
-        </g>
-      </svg>
-    </div>
-    <span class="peep-flare" aria-hidden="true"></span>
-  </div>
-
+  <img
+    class="peep-photo"
+    src="{{ url_for('static', filename='img/peephole.jpg') }}"
+    alt="鱼眼窥孔中的走廊与门"
+  >
   <div class="peep-meta">
     <p class="peep-kicker">IN HER ROOM · A CASE ARCHIVE</p>
     <p class="peep-title">与 她 的 房 间</p>
     <p class="peep-hint">推 门 而 入</p>
   </div>
-
-  <!-- 穿门时铺满全屏的白光 -->
   <div class="peep-flood" aria-hidden="true"></div>
 </a>
 
@@ -69,7 +34,6 @@
       going = true;
       e.preventDefault();
       document.body.classList.add("entering");
-      // 与 CSS 动画时长对齐后跳转
       setTimeout(function () { window.location = dest; }, 1150);
     });
   })();
