@@ -64,8 +64,9 @@ button, input, select, textarea {
   /* 镜筒渐晕：视野边缘向黑暗收拢，营造鱼眼窥孔 */
   box-shadow:
     inset 0 0 0 3px var(--black),
-    inset 0 0 34px 20px rgba(0, 0, 0, 0.55),
-    inset 0 0 90px 60px rgba(0, 0, 0, 0.35);
+    inset 0 0 30px 14px rgba(0, 0, 0, 0.7),
+    inset 0 0 70px 46px rgba(0, 0, 0, 0.55),
+    inset 0 0 130px 90px rgba(0, 0, 0, 0.3);
   animation: peep-open 1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -75,13 +76,13 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 鱼眼：中心略微膨胀 */
-  transform: scale(1.12);
+  /* 鱼眼：中心强烈膨胀 */
+  transform: scale(1.42);
 }
 
 .peep-door {
-  width: 62%;
-  height: 80%;
+  width: 74%;
+  height: 92%;
   color: var(--black);
 }
 
@@ -93,7 +94,7 @@ button, input, select, textarea {
 }
 
 .peep-door-leaf {
-  transform-origin: 82px 180px;
+  transform-origin: 88px 180px;
   transition: transform 0.9s cubic-bezier(0.5, 0, 0.2, 1);
 }
 

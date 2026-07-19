@@ -15,27 +15,34 @@
   <div class="peep-lens">
     <div class="peep-scene">
       <svg class="peep-door" viewBox="0 0 240 360" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <!-- 走廊透视 -->
-        <polygon class="ln" points="0,0 240,0 176,54 64,54"/>
-        <polygon class="ln" points="0,360 240,360 176,306 64,306"/>
-        <line class="ln" x1="64" y1="54" x2="64" y2="306"/>
-        <line class="ln" x1="176" y1="54" x2="176" y2="306"/>
-        <!-- 牢门 -->
+        <!-- 鱼眼桶形走廊：所有线条向外强烈弯曲 -->
+        <!-- 顶/底大弧，暗示天花与地面被镜片鼓起 -->
+        <path class="ln" d="M18,66 Q120,150 222,66"/>
+        <path class="ln" d="M18,294 Q120,210 222,294"/>
+        <!-- 四条透视缝线，弯曲收拢到牢门四角 -->
+        <path class="ln" d="M10,86 Q70,120 88,116"/>
+        <path class="ln" d="M230,86 Q170,120 152,116"/>
+        <path class="ln" d="M10,274 Q70,240 88,244"/>
+        <path class="ln" d="M230,274 Q170,240 152,244"/>
+        <!-- 侧墙内弯 -->
+        <path class="ln" d="M14,80 Q40,180 14,280"/>
+        <path class="ln" d="M226,80 Q200,180 226,280"/>
+
+        <!-- 牢门：四边向外鼓成桶形 -->
         <g class="peep-door-leaf">
-          <rect class="ln" x="82" y="72" width="76" height="216"/>
-          <rect class="ln" x="82" y="72" width="76" height="216"/>
-          <!-- 门上小窗与铁栏 -->
-          <rect class="ln" x="100" y="92" width="40" height="34"/>
-          <line class="ln" x1="110" y1="92" x2="110" y2="126"/>
-          <line class="ln" x1="120" y1="92" x2="120" y2="126"/>
-          <line class="ln" x1="130" y1="92" x2="130" y2="126"/>
+          <path class="ln" d="M88,116 Q120,104 152,116 Q166,180 152,244 Q120,256 88,244 Q74,180 88,116 Z"/>
+          <!-- 门上小窗与铁栏（随门面弯曲） -->
+          <path class="ln" d="M102,132 Q120,127 138,132 Q140,146 138,160 Q120,165 102,160 Q100,146 102,132 Z"/>
+          <path class="ln" d="M112,130 Q113,146 112,162"/>
+          <path class="ln" d="M120,129 Q121,146 120,163"/>
+          <path class="ln" d="M128,130 Q129,146 128,162"/>
           <!-- 号牌 -->
-          <rect class="ln" x="104" y="150" width="32" height="18"/>
-          <text class="peep-plate" x="120" y="164" text-anchor="middle">HER</text>
+          <path class="ln" d="M105,172 Q120,169 135,172 L135,188 Q120,191 105,188 Z"/>
+          <text class="peep-plate" x="120" y="184" text-anchor="middle">HER</text>
           <!-- 门板分格与门闩 -->
-          <rect class="ln" x="94" y="182" width="52" height="42"/>
-          <rect class="ln" x="94" y="234" width="52" height="42"/>
-          <circle class="ln peep-knob" cx="148" cy="212" r="4"/>
+          <path class="ln" d="M96,198 Q120,193 144,198 Q146,210 144,222 Q120,227 96,222 Q94,210 96,198 Z"/>
+          <path class="ln" d="M96,230 Q120,226 144,230 Q145,236 144,242 Q120,247 96,242 Q95,236 96,230 Z"/>
+          <circle class="ln peep-knob" cx="150" cy="210" r="4"/>
         </g>
       </svg>
     </div>
