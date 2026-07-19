@@ -40,63 +40,163 @@ button, input, select, textarea {
 
 /* --------------------------------- Splash ---------------------------------- */
 
-.splash-body { overflow: hidden; }
+/* 入场：鱼眼窥孔望向牢门，点击推门穿入 —— 纯黑白，唯一处用到镜筒渐晕。 */
 
-.splash {
+.peep-body { overflow: hidden; background: var(--black); }
+
+.peep {
   position: fixed;
   inset: 0;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
   cursor: pointer;
 }
 
-.splash-half {
-  flex: 1;
+.peep-lens {
+  position: relative;
+  width: min(78vmin, 560px);
+  height: min(78vmin, 560px);
+  border-radius: 50%;
+  background: var(--white);
+  overflow: hidden;
+  /* 镜筒渐晕：视野边缘向黑暗收拢，营造鱼眼窥孔 */
+  box-shadow:
+    inset 0 0 0 3px var(--black),
+    inset 0 0 34px 20px rgba(0, 0, 0, 0.55),
+    inset 0 0 90px 60px rgba(0, 0, 0, 0.35);
+  animation: peep-open 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.peep-scene {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* 鱼眼：中心略微膨胀 */
+  transform: scale(1.12);
 }
 
-.splash-half--black { background: var(--black); color: var(--white); }
-.splash-half--white { background: var(--white); color: var(--black); }
-
-.splash-word {
-  font-size: clamp(2.5rem, 8vw, 6rem);
-  letter-spacing: 0.25em;
-  font-weight: 600;
-  writing-mode: vertical-rl;
+.peep-door {
+  width: 62%;
+  height: 80%;
+  color: var(--black);
 }
 
-.splash-door {
-  width: 6px;
-  background: var(--white);
-  border-left: 2px solid var(--black);
-  border-right: 2px solid var(--black);
-  transition: width 0.4s;
+.peep .ln {
+  fill: none;
+  stroke: var(--black);
+  stroke-width: 2.4;
+  vector-effect: non-scaling-stroke;
 }
 
-.splash:hover .splash-door { width: 48px; }
+.peep-door-leaf {
+  transform-origin: 82px 180px;
+  transition: transform 0.9s cubic-bezier(0.5, 0, 0.2, 1);
+}
 
-.splash-meta {
+.peep-plate {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  fill: var(--black);
+}
+
+.peep-knob { fill: var(--black); }
+
+/* 镜面高光斑，暗示玻璃镜片 */
+.peep-flare {
+  position: absolute;
+  top: 16%;
+  left: 22%;
+  width: 26%;
+  height: 26%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.9), rgba(255,255,255,0) 60%);
+  pointer-events: none;
+}
+
+.peep-meta {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 8vh;
+  bottom: 6vh;
   text-align: center;
-  mix-blend-mode: difference;
   color: var(--white);
 }
 
-.splash-kicker {
+.peep-kicker {
   margin: 0;
   font-family: "Cormorant Garamond", serif;
   font-size: 0.72rem;
-  letter-spacing: 0.4em;
+  letter-spacing: 0.42em;
+  opacity: 0.7;
 }
 
-.splash-hint {
-  margin: 0.75rem 0 0;
-  font-size: 0.95rem;
+.peep-title {
+  margin: 0.6rem 0 0.9rem;
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: 0.34em;
+}
+
+.peep-hint {
+  margin: 0;
+  font-size: 0.9rem;
   letter-spacing: 0.6em;
+  animation: peep-breathe 2.4s ease-in-out infinite;
+}
+
+.peep-flood {
+  position: absolute;
+  inset: 0;
+  background: var(--white);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes peep-open {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@keyframes peep-breathe {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+/* 悬停：门微开、镜头略前推，暗示可入 */
+.peep:hover .peep-door-leaf { transform: rotateY(-24deg); }
+.peep:hover .peep-lens { transform: scale(1.02); }
+.peep-lens { transition: transform 0.5s ease; }
+
+/* 穿门：门大开 → 镜头推近 → 白光铺满 → 跳转 */
+.entering .peep-lens {
+  animation: peep-push 1.15s cubic-bezier(0.6, 0, 0.3, 1) forwards;
+}
+.entering .peep-door-leaf { transform: rotateY(-88deg); }
+.entering .peep-meta { animation: peep-fade 0.45s ease forwards; }
+.entering .peep-flood { animation: peep-flood 1.15s ease-in forwards; }
+
+@keyframes peep-push {
+  0%   { transform: scale(1.02); }
+  55%  { transform: scale(2.4); }
+  100% { transform: scale(6); border-radius: 0; }
+}
+@keyframes peep-flood {
+  0%, 55% { opacity: 0; }
+  100%    { opacity: 1; }
+}
+@keyframes peep-fade {
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peep-lens, .entering .peep-lens,
+  .peep-hint, .entering .peep-flood { animation: none; }
+  .entering .peep-flood { opacity: 1; }
 }
 
 /* --------------------------------- Sidebar --------------------------------- */
@@ -399,16 +499,16 @@ button, input, select, textarea {
 .info-row dt { flex: 0 0 4.5rem; font-weight: 600; letter-spacing: 0.05em; }
 .info-row dd { margin: 0; flex: 1; }
 
-/* ---------------------------- Vertical timelines ---------------------------- */
+/* ------------------------- Detail page: event timeline --------------------- */
 
-.event-timeline, .century-timeline {
+.event-timeline {
   list-style: none;
   margin: 0;
   padding: 0;
   position: relative;
 }
 
-.event-timeline::before, .century-timeline::before {
+.event-timeline::before {
   content: "";
   position: absolute;
   top: 0;
@@ -418,14 +518,14 @@ button, input, select, textarea {
   background: currentColor;
 }
 
-.event, .century-item {
+.event {
   position: relative;
   width: 50%;
   padding: 0.9rem 2rem 0.9rem 0;
   text-align: right;
 }
 
-.event--right, .century-item--right {
+.event--right {
   margin-left: 50%;
   padding: 0.9rem 0 0.9rem 2rem;
   text-align: left;
@@ -440,9 +540,7 @@ button, input, select, textarea {
   background: currentColor;
 }
 
-.event--right .event-dot, .century-item--right .event-dot { right: auto; left: -4.5px; }
-.century-item .event-dot { right: -4.5px; }
-.century-item--right .event-dot { right: auto; left: -4.5px; }
+.event--right .event-dot { right: auto; left: -4.5px; }
 
 .event-date {
   display: block;
@@ -463,41 +561,104 @@ button, input, select, textarea {
 .story-para:last-child { margin-bottom: 0; }
 .story-para::first-letter { font-size: 1.15em; font-weight: 600; }
 
-/* Century timeline (overview page) */
+/* --------------------------- Timeline: door hall --------------------------- */
 
-.century-year {
-  display: block;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 1.6rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+.door-hall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 2.25rem 1.5rem;
 }
 
-.century-card { display: block; }
-.century-card:hover .century-name { border-bottom: 1px solid currentColor; }
-
-.century-symbol {
-  display: inline-block;
-  width: 36px;
-  height: 36px;
-  margin: 0.3rem 0;
+.door-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.century-no {
-  display: block;
+.door-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 100 / 170;
+  perspective: 1000px;
+  border-bottom: 2px solid var(--black);
+}
+
+/* 门后的黑暗 */
+.door-void {
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.door-void-no {
   font-family: "Cormorant Garamond", serif;
   font-size: 0.72rem;
-  letter-spacing: 0.25em;
-  opacity: 0.6;
+  letter-spacing: 0.28em;
+  opacity: 0.7;
+}
+.door-void-cue { font-size: 0.8rem; letter-spacing: 0.2em; }
+
+/* 门扇：沿左侧铰链旋开 */
+.door-leaf {
+  position: absolute;
+  inset: 0;
+  background: var(--white);
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: transform 0.65s cubic-bezier(0.45, 0.05, 0.2, 1);
+  backface-visibility: hidden;
 }
 
-.century-name { display: inline-block; font-size: 1.15rem; letter-spacing: 0.05em; }
-.century-meta { display: block; font-size: 0.78rem; opacity: 0.65; }
+.door-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.door-svg .dl {
+  fill: none;
+  stroke: var(--black);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
 
-.century-item, .century-item--right { display: flex; flex-direction: column; align-items: flex-end; }
-.century-item--right { align-items: flex-start; }
-.century-item .century-symbol { align-self: flex-end; }
-.century-item--right .century-symbol { align-self: flex-start; }
+.door-year {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12%;
+  text-align: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.door-cell:hover .door-leaf,
+.door-cell:focus-visible .door-leaf { transform: rotateY(-105deg); }
+
+.door-caption {
+  margin-top: 0.9rem;
+  font-size: 1.02rem;
+  letter-spacing: 0.05em;
+}
+.door-caption-meta {
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+  opacity: 0.6;
+  letter-spacing: 0.04em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .door-leaf { transition: none; }
+}
 
 /* ------------------------------- Term links -------------------------------- */
 
@@ -816,19 +977,20 @@ button, input, select, textarea {
 @media (max-width: 640px) {
   .case-grid { grid-template-columns: 1fr; }
 
-  /* 单列时间轴 */
-  .event-timeline::before, .century-timeline::before { left: 4px; }
-  .event, .century-item,
-  .event--right, .century-item--right {
+  /* 详情页事件时间轴：移动端单列 */
+  .event-timeline::before { left: 4px; }
+  .event, .event--right {
     width: 100%;
     margin-left: 0;
     padding: 0.9rem 0 0.9rem 1.75rem;
     text-align: left;
     align-items: flex-start;
   }
-  .event .event-dot, .century-item .event-dot,
-  .event--right .event-dot, .century-item--right .event-dot { right: auto; left: 0; }
-  .century-item .century-symbol { align-self: flex-start; }
+  .event .event-dot, .event--right .event-dot { right: auto; left: 0; }
   .bar-label { flex-basis: 6.5rem; font-size: 0.75rem; }
-  .splash-word { letter-spacing: 0.12em; }
+
+  /* 门厅：小屏收窄 */
+  .door-hall { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1.75rem 1rem; }
+  .peep-lens { width: 86vmin; height: 86vmin; }
+  .peep-title { letter-spacing: 0.2em; }
 }

@@ -8,19 +8,64 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="splash-body">
-<a href="{{ url_for('overview') }}" class="splash" aria-label="进入档案">
-  <div class="splash-half splash-half--black">
-    <span class="splash-word">与她</span>
+<body class="peep-body">
+
+<a href="{{ url_for('overview') }}" class="peep" id="peep" aria-label="推门进入档案">
+  <!-- 鱼眼窥孔：黑色镜筒中一枚圆形视野，望向走廊尽头的牢门 -->
+  <div class="peep-lens">
+    <div class="peep-scene">
+      <svg class="peep-door" viewBox="0 0 240 360" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <!-- 走廊透视 -->
+        <polygon class="ln" points="0,0 240,0 176,54 64,54"/>
+        <polygon class="ln" points="0,360 240,360 176,306 64,306"/>
+        <line class="ln" x1="64" y1="54" x2="64" y2="306"/>
+        <line class="ln" x1="176" y1="54" x2="176" y2="306"/>
+        <!-- 牢门 -->
+        <g class="peep-door-leaf">
+          <rect class="ln" x="82" y="72" width="76" height="216"/>
+          <rect class="ln" x="82" y="72" width="76" height="216"/>
+          <!-- 门上小窗与铁栏 -->
+          <rect class="ln" x="100" y="92" width="40" height="34"/>
+          <line class="ln" x1="110" y1="92" x2="110" y2="126"/>
+          <line class="ln" x1="120" y1="92" x2="120" y2="126"/>
+          <line class="ln" x1="130" y1="92" x2="130" y2="126"/>
+          <!-- 号牌 -->
+          <rect class="ln" x="104" y="150" width="32" height="18"/>
+          <text class="peep-plate" x="120" y="164" text-anchor="middle">HER</text>
+          <!-- 门板分格与门闩 -->
+          <rect class="ln" x="94" y="182" width="52" height="42"/>
+          <rect class="ln" x="94" y="234" width="52" height="42"/>
+          <circle class="ln peep-knob" cx="148" cy="212" r="4"/>
+        </g>
+      </svg>
+    </div>
+    <span class="peep-flare" aria-hidden="true"></span>
   </div>
-  <div class="splash-door" aria-hidden="true"></div>
-  <div class="splash-half splash-half--white">
-    <span class="splash-word">的房间</span>
+
+  <div class="peep-meta">
+    <p class="peep-kicker">IN HER ROOM · A CASE ARCHIVE</p>
+    <p class="peep-title">与 她 的 房 间</p>
+    <p class="peep-hint">推 门 而 入</p>
   </div>
-  <div class="splash-meta">
-    <p class="splash-kicker">IN HER ROOM · A CASE ARCHIVE</p>
-    <p class="splash-hint">推 门 而 入</p>
-  </div>
+
+  <!-- 穿门时铺满全屏的白光 -->
+  <div class="peep-flood" aria-hidden="true"></div>
 </a>
+
+<script>
+  (function () {
+    var peep = document.getElementById("peep");
+    var dest = peep.getAttribute("href");
+    var going = false;
+    peep.addEventListener("click", function (e) {
+      if (going) return;
+      going = true;
+      e.preventDefault();
+      document.body.classList.add("entering");
+      // 与 CSS 动画时长对齐后跳转
+      setTimeout(function () { window.location = dest; }, 1150);
+    });
+  })();
+</script>
 </body>
 </html>
